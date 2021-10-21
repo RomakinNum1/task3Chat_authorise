@@ -9,7 +9,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Roman\\Func\\": "/var/www/html/public/"
+            "Roman\\Func\\": "../web/public"
         }
     },
     "require": {

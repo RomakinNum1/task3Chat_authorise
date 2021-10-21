@@ -126,7 +126,7 @@ class dataBaseEditor
         $mail->Subject = 'Подтверждение email';
         $mail->msgHTML("<html><body>
                 <h1>Здравствуйте!</h1>
-                <p>Подтвердите свою почту по ссылке: <a href='http://task2.loc/confirm/$token'>ссылка</a></p>
+                <p>Подтвердите свою почту по ссылке: <a href='http://users.api.loc/confirm/$token'>ссылка</a></p>
                 </html></body>");
         $mail->send();
         // Отправляем
