@@ -1,5 +1,6 @@
 <?php
 
+use Firebase\JWT\JWT;
 use Roman\Func\ConnectToDB;
 use Roman\Func\dataBaseEditor;
 const ERROR_ON_INPUTS = 1;
@@ -28,17 +29,16 @@ if (!empty($error_fields)) {
 }
 
 $res = dataBaseEditor::Select($dataBaseConnect, $_POST);
-
 if ($res) {
     //$user = $check->fetch(PDO::FETCH_ASSOC);
-    $_SESSION['user'] = [
+    /*$_SESSION['user'] = [
         'id' => $_POST['id'],
         'fullName' => $_POST['fullName'],
         'email' => $_POST['email']
-    ];
-
+    ];*/
     $response = [
-        "status" => true
+        "status" => true,
+        "fullName" => $res['fullName']
     ];
 
 } else {
