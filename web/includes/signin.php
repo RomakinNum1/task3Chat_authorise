@@ -30,15 +30,9 @@ if (!empty($error_fields)) {
 
 $res = dataBaseEditor::Select($dataBaseConnect, $_POST);
 if ($res) {
-    //$user = $check->fetch(PDO::FETCH_ASSOC);
-    /*$_SESSION['user'] = [
-        'id' => $_POST['id'],
-        'fullName' => $_POST['fullName'],
-        'email' => $_POST['email']
-    ];*/
     $response = [
         "status" => true,
-        "fullName" => $res['fullName']
+        "fullName" => JWT::encode($res, $_ENV['JWT_KEY'])
     ];
 
 } else {

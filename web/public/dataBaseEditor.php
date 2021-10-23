@@ -148,6 +148,15 @@ class dataBaseEditor
         return $res;
     }
 
+    static function SelectForToken($connect, $data)
+    {
+        $decoded = JWT::decode($data, $_ENV['JWT_KEY'], array('HS256'));
+        $checkLogin = $connect->prepare('SELECT * FROM users WHERE id = :id');
+        $checkLogin->execute(['id'=>$decoded->id]);
+
+        return $checkLogin->fetch(PDO::FETCH_ASSOC);
+    }
+
     static function SelectLogin($connect, $data, $sql)
     {
         $checkLogin = $connect->prepare($sql);
