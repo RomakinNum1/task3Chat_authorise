@@ -23,7 +23,7 @@ try {
     $routes->add('confirmUser', new Route('/confirm/{token}'));
     $routes->add('signIn', new Route('/includes/signin'));
     $routes->add('signUp', new Route('/includes/signup'));
-    $routes->add('getToken', new Route('/includes/getToken'));
+
 
     $context = new RequestContext();
     $context->fromRequest(Request::createFromGlobals());
@@ -38,11 +38,6 @@ try {
 
     if ($parameters['_route'] == 'signUp') {
         require_once 'web/includes/signup.php';
-        return;
-    }
-
-    if ($parameters['_route'] == 'getToken') {
-        require_once 'web/includes/getToken.php';
         return;
     }
 
