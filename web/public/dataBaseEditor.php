@@ -165,17 +165,6 @@ class dataBaseEditor
         return $checkLogin->fetch(PDO::FETCH_ASSOC);
     }
 
-    /*private static function getColumnNames($dataBaseConnect)
-    {
-        $sth = $dataBaseConnect->prepare("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='test' AND `TABLE_NAME`='users'");
-        $sth->execute();
-        $output = [];
-        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $output[] = $row['COLUMN_NAME'];
-        }
-        return $output;
-    }*/
-
     static function addMessage($dataBaseConnect, $data)
     {
         $resultDB = $dataBaseConnect->prepare("insert into messages values (null, :name, :message)");
