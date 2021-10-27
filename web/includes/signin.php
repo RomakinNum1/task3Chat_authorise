@@ -32,7 +32,7 @@ $res = dataBaseEditor::Select($dataBaseConnect, $_POST);
 if ($res) {
     $response = [
         "status" => true,
-        "fullName" => JWT::encode($res, $_ENV['JWT_KEY'])
+        "Id" => JWT::encode($res['id'], $_ENV['JWT_KEY'])
     ];
 
 } else {
