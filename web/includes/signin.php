@@ -2,12 +2,13 @@
 
 use Firebase\JWT\JWT;
 use Roman\Func\ConnectToDB;
-use Roman\Func\dataBaseEditor;
+use Roman\Func\DataBaseEditor;
+
 const ERROR_ON_INPUTS = 1;
 
-$dataBaseConnect = ConnectToDB::connect();
+$dataBaseConnect = ConnectToDB::connect();                      //подключение к базе данных
 
-$error_fields = [];
+$error_fields = [];                                             //массив названий ошибочных полей
 
 if ($_POST['login'] === '') {
     $error_fields[] = 'login';
@@ -28,7 +29,7 @@ if (!empty($error_fields)) {
     die();
 }
 
-$res = dataBaseEditor::Select($dataBaseConnect, $_POST);
+$res = DataBaseEditor::Select($dataBaseConnect, $_POST);        //получение записи из базы данных
 if ($res) {
     $response = [
         "status" => true,

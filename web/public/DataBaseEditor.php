@@ -6,93 +6,43 @@ use Firebase\JWT\JWT;
 use PDO;
 use PHPMailer\PHPMailer\PHPMailer;
 
-class dataBaseEditor
+class DataBaseEditor
 {
-    static function getUsers($dataBaseConnect)
-    {
-        $userList = [];
-        $resultDB = $dataBaseConnect->prepare("select * from users");
-        $resultDB->execute();
-
-        while ($res = $resultDB->fetch(PDO::FETCH_ASSOC)) {
-            $userList[] = $res;
-        }
-
-        self::echoResults($userList, 200);
-    }
-
-    static function getUser($dataBaseConnect, $id)
-    {
-        $resultDB = $dataBaseConnect->prepare("select * from users where id = :id");
-        $resultDB->execute(['id' => $id]);
-        $res = $resultDB->fetch(PDO::FETCH_ASSOC);
-
-        if (!$res) {
-            self::echoResults('User not found', 404);
-            die();
-        }
-        self::echoResults($res, 200);
-    }
-
+    //функция добавления нового пользователя
     static function addUser($dataBaseConnect, $data)
     {
         if ($data['fullName'] != '' && $data['email'] != '' && filter_var($data['email'], FILTER_VALIDATE_EMAIL) && $data['login'] != '' && $data['password'] != '') {
             $resultDB = $dataBaseConnect->prepare("insert into users values (null, :fullName, :email, false, :login, :password)");
             $resultDB->execute(array('fullName' => $data['fullName'], 'email' => $data['email'], 'login' => $data['login'], 'password' => md5($data['password'])));
 
-            $data1 = [
+            $dataForToken = [
                 'time' => time() + 30,
                 'id' => $dataBaseConnect->lastInsertId()
             ];
 
-            $jwt = JWT::encode($data1, $_ENV['JWT_KEY']);
+            $jwt = JWT::encode($dataForToken, $_ENV['JWT_KEY']);
 
             self::sendMessage($jwt, $data);
-
-            /*$res = $dataBaseConnect->lastInsertId();
-
-            self::echoResults($res, 201);*/
         } else {
             self::echoResults('The username or email or password or login is incorrect', 400);
         }
     }
 
-    static function updateUser($dataBaseConnect, $id, $data)
-    {
-        $resultDB = $dataBaseConnect->prepare("select * from users where id = :id");
-        $resultDB->execute(['id' => $id]);
-        $res = $resultDB->fetch(PDO::FETCH_ASSOC);
-
-        if ($data['firstName'] != '' && $data['lastName'] != '' && $res && $data['email'] != '') {
-            $resultDB = $dataBaseConnect->prepare("update users set firstName = :firstName, lastName = :lastName, email = :email where id = $id");
-            $resultDB->execute(array(':firstName' => $data['firstName'], ':lastName' => $data['lastName'], ':email' => $data['email']));
-
-            $res = 'User is updated';
-
-            self::echoResults($res, 202);
-        } else self::echoResults('The username or password is incorrect', 400);
-    }
-
-    static function deleteUser($dataBaseConnect, $id)
-    {
-        $resultDB = $dataBaseConnect->prepare("delete from users where id = :id");
-        $resultDB->execute(['id' => $id]);
-
-        self::echoResults('', 204);
-    }
-
+    //удаление неактивных пользователей
     static function deleteInactiveUsers($dataBaseConnect, $id)
     {
         $resultDB = $dataBaseConnect->prepare("delete from users where id = :id AND status = 0");
         $resultDB->execute(['id' => $id]);
     }
 
+    //вывод результатов
     static function echoResults($res, $code)
     {
         http_response_code($code);
         echo json_encode($res);
     }
 
+    //функция подтверждения email
     static function confirmEmail($dataBaseConnect, $token)
     {
         $resultDB = $dataBaseConnect->prepare("select * from users where id = :id AND status = 0");
@@ -108,6 +58,7 @@ class dataBaseEditor
         }
     }
 
+    //отправка сообщения email
     static function sendMessage($token, $data)
     {
         $mail = new PHPMailer();
@@ -137,6 +88,7 @@ class dataBaseEditor
         }*/
     }
 
+    //функция выборки записи из базы данных
     static function Select($connect, $data)
     {
         $data['password'] = md5($data['password']);
@@ -148,6 +100,7 @@ class dataBaseEditor
         return $res;
     }
 
+    //функция выборки записи из базы данных
     static function SelectLogin($connect, $data, $sql)
     {
         $checkLogin = $connect->prepare($sql);

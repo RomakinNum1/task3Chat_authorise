@@ -1,14 +1,14 @@
 <?php
 
 use Roman\Func\ConnectToDB;
-use Roman\Func\dataBaseEditor;
+use Roman\Func\DataBaseEditor;
 
 const SELECT_USER = "SELECT * FROM `users` WHERE login = :login";
 const ERROR_ON_INPUTS = 1;
 
-$dataBaseConnect = ConnectToDB::connect();
+$dataBaseConnect = ConnectToDB::connect();                                      //подключение к базе данных
 
-if (dataBaseEditor::SelectLogin($dataBaseConnect,$_POST,SELECT_USER)){//($user) {
+if (DataBaseEditor::SelectLogin($dataBaseConnect,$_POST,SELECT_USER)){      //получение записи из базы данных
     $response = [
         "status" => false,
         "type" => ERROR_ON_INPUTS,
@@ -20,7 +20,7 @@ if (dataBaseEditor::SelectLogin($dataBaseConnect,$_POST,SELECT_USER)){//($user) 
     die();
 }
 
-$errorFields = [];
+$errorFields = [];                                                              //массив названий ошибочных полей
 
 if ($_POST['login'] === '') {
     $errorFields[] = 'login';
@@ -64,7 +64,7 @@ if ($_POST['password'] === $_POST['password_confirm']) {
 
     //_POST['password'] = md5($_POST['password']);
 
-    dataBaseEditor::addUser($dataBaseConnect, $_POST);
+    DataBaseEditor::addUser($dataBaseConnect, $_POST);                          //добавление пользователя в базу данных
 
     $response = [
         "status" => true,

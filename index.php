@@ -2,7 +2,7 @@
 
 use Firebase\JWT\JWT;
 use Roman\Func\ConnectToDB;
-use Roman\Func\dataBaseEditor;
+use Roman\Func\DataBaseEditor;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -20,9 +20,9 @@ $dataBaseConnect = ConnectToDB::connect();
 
 try {
     $routes = new RouteCollection();
-    $routes->add('confirmUser', new Route('/confirm/{token}'));
-    $routes->add('signIn', new Route('/includes/signin'));
-    $routes->add('signUp', new Route('/includes/signup'));
+    $routes->add('confirmUser', new Route('/confirm/{token}')); //форма подтверждения email
+    $routes->add('signIn', new Route('/includes/signin'));      //форма проверки авторизации
+    $routes->add('signUp', new Route('/includes/signup'));      //форма проверки регистрации
 
 
     $context = new RequestContext();
@@ -44,21 +44,21 @@ try {
     if ($parameters['_route'] == 'confirmUser') {
         $decoded = JWT::decode($parameters['token'], $_ENV['JWT_KEY'], array('HS256'));
 
-        if (dataBaseEditor::confirmEmail($dataBaseConnect, $decoded->id)) {
-            dataBaseEditor::echoResults('Email confirmed', 200);
+        if (DataBaseEditor::confirmEmail($dataBaseConnect, $decoded->id)) {
+            DataBaseEditor::echoResults('Email confirmed', 200);
             return;
         } else {
             if ($decoded->time < time()) {
-                dataBaseEditor::deleteInactiveUsers($dataBaseConnect, $decoded->id);
-                dataBaseEditor::echoResults('Address not found', 404);
+                DataBaseEditor::deleteInactiveUsers($dataBaseConnect, $decoded->id);
+                DataBaseEditor::echoResults('Address not found', 404);
                 return;
             } else {
-                dataBaseEditor::echoResults('The address is invalid', 404);
+                DataBaseEditor::echoResults('The address is invalid', 404);
             }
         }
         return;
     }
-    dataBaseEditor::echoResults('The request is incorrect', 400);
+    DataBaseEditor::echoResults('The request is incorrect', 400);
 } catch (ResourceNotFoundException $ex) {
-    dataBaseEditor::echoResults('The request is incorrect', 400);
+    DataBaseEditor::echoResults('The request is incorrect', 400);
 }
