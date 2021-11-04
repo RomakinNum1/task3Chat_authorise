@@ -20,9 +20,9 @@ $dataBaseConnect = ConnectToDB::connect();
 
 try {
     $routes = new RouteCollection();
-    $routes->add('confirmUser', new Route('/confirm/{token}')); //форма подтверждения email
-    $routes->add('signIn', new Route('/includes/signin'));      //форма проверки авторизации
-    $routes->add('signUp', new Route('/includes/signup'));      //форма проверки регистрации
+    $routes->add('confirmUser', new Route('/user_api/confirm/{token}')); //форма подтверждения email
+    $routes->add('signIn', new Route('/user_api/includes/signin'));      //форма проверки авторизации
+    $routes->add('signUp', new Route('/user_api/includes/signup'));      //форма проверки регистрации
 
 
     $context = new RequestContext();
